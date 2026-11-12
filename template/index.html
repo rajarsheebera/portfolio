@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rajarshee Bera | Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Gochi+Hand&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --night: #0b1030;
+            --ink: #f6ead2;
+            --muted: #cbc4da;
+            --terracotta: #e8855a;
+            --mustard: #f2c56b;
+            --sage: #8fc3b0;
+            --teal: #5fa8b0;
+            --plum: #c78ab0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--night);
+            color: var(--ink);
+            font-family: "Kalam", cursive;
+            font-size: 1.15rem;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Soft grain over everything */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 50;
+            opacity: 0.14;
+            mix-blend-mode: overlay;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+        }
+
+        h1, h2, .chapter-number { font-family: "Gochi Hand", cursive; font-weight: 400; line-height: 1.05; }
+
+        /* ---------- Scroll progress ---------- */
+        #progress {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 6px;
+            background: var(--mustard);
+            transform-origin: left;
+            transform: scaleX(0);
+            z-index: 60;
+        }
+
+        /* ---------- Beach scene (fixed behind everything) ---------- */
+        .scene { position: fixed; inset: 0; z-index: 0; overflow: hidden; }
+        .scene > * { position: absolute; }
+
+        .sky {
+            inset: 0;
+            background: linear-gradient(180deg, #0b1030 0%, #241f55 35%, #6e3d66 52%, #d9774a 62%);
+        }
+        .glow {
+            left: 0; right: 0; top: 35%; height: 30%;
+            background: radial-gradient(ellipse at 50% 100%, rgba(255, 170, 90, .55), transparent 70%);
+        }
+        .stars { left: 0; right: 0; top: 0; height: 55%; }
+        .star { position: absolute; border-radius: 50%; background: #fff8e6; }
+
+        .moon {
+            top: 9vh;
+            left: 50%;
+            width: 220px; height: 220px;
+            margin-left: -110px;
+            border-radius: 50%;
+            background:
+                radial-gradient(circle at 30% 35%, rgba(170, 140, 95, .35) 0 9%, transparent 10%),
+                radial-gradient(circle at 64% 55%, rgba(170, 140, 95, .30) 0 12%, transparent 13%),
+                radial-gradient(circle at 45% 80%, rgba(170, 140, 95, .30) 0 7%, transparent 8%),
+                radial-gradient(circle at 35% 30%, #fffaf0, #f4e1b5 65%, #dcc28f);
+            box-shadow: 0 0 70px 25px rgba(255, 233, 170, .35);
+        }
+
+        .sea {
+            left: 0; right: 0; top: 62%; bottom: 12%;
+            background: linear-gradient(180deg, #1d3d62, #0b1d33);
+            overflow: hidden;
+        }
+        .wave {
+            position: absolute;
+            left: 0;
+            width: calc(100% + 200px);
+            height: 40px;
+            background-repeat: repeat-x;
+            background-size: 200px 40px;
+        }
+        .wave1 { top: 0;   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='40'><path d='M0 20 Q50 0 100 20 T200 20 V40 H0 Z' fill='rgb(95,168,176)' fill-opacity='.35'/></svg>"); }
+        .wave2 { top: 35%; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='40'><path d='M0 20 Q50 0 100 20 T200 20 V40 H0 Z' fill='rgb(143,195,176)' fill-opacity='.2'/></svg>"); }
+        .wave3 { top: 68%; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='40'><path d='M0 20 Q50 0 100 20 T200 20 V40 H0 Z' fill='rgb(95,168,176)' fill-opacity='.3'/></svg>"); }
+
+        .reflection { left: 50%; top: 6%; width: 200px; margin-left: -100px; }
+        .reflection i {
+            display: block;
+            height: 4px;
+            margin: 0 auto 11px;
+            border-radius: 4px;
+            background: rgba(255, 236, 170, .55);
+        }
+
+        .foam {
+            left: 0;
+            bottom: calc(12% - 14px);
+            width: calc(100% + 200px);
+            height: 40px;
+            background-repeat: repeat-x;
+            background-size: 200px 40px;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='40'><path d='M0 20 Q50 0 100 20 T200 20 V40 H0 Z' fill='rgb(246,234,210)' fill-opacity='.35'/></svg>");
+        }
+
+        .sand {
+            left: 0; right: 0; bottom: 0; height: 12%;
+            background:
+                radial-gradient(rgba(255, 255, 255, .08) 1px, transparent 1.5px) 0 0 / 14px 14px,
+                linear-gradient(180deg, #4a3626, #2a1d14);
+        }
+
+        /* ---------- Page content ---------- */
+        main, header, .contact, footer { position: relative; z-index: 1; }
+
+        /* ---------- Hero ---------- */
+        header {
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            text-align: center;
+            padding: 40px 20px;
+        }
+        .hero-text { text-shadow: 0 2px 14px rgba(0, 0, 0, .55); }
+        .hero-text .hello { letter-spacing: .15em; font-size: 1.3rem; color: var(--mustard); }
+        .hero-text h1 { font-size: clamp(3.2rem, 12vw, 7.5rem); margin: 6px 0 10px; }
+        .hero-text h1 .word { display: inline-block; white-space: nowrap; margin: 0 .12em; }
+        .hero-text h1 .letter { display: inline-block; }
+        .hero-text .role { font-size: 1.4rem; color: var(--ink); }
+
+        .scroll-hint {
+            position: absolute;
+            bottom: 8vh; left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.1rem;
+            letter-spacing: .1em;
+            color: var(--ink);
+            text-shadow: 0 2px 8px rgba(0, 0, 0, .6);
+        }
+
+        /* ---------- Chapters ---------- */
+        .chapter {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 80px 24px;
+        }
+        .chapter.flip .story { order: 2; }
+
+        .chapter-number { font-size: 7rem; color: var(--mustard); opacity: 0; }
+        .chapter-label { letter-spacing: .12em; font-size: 1rem; text-transform: uppercase; color: var(--plum); }
+        .story h2 { font-size: clamp(2.4rem, 5.5vw, 3.6rem); margin: 8px 0 14px; }
+        .story p { color: var(--muted); max-width: 430px; }
+        .tag {
+            display: inline-block;
+            margin-top: 18px;
+            padding: 2px 18px;
+            border: 2px dashed var(--mustard);
+            border-radius: 40px;
+            color: var(--mustard);
+        }
+
+        .reveal { opacity: 0; }
+
+        .stage {
+            background: rgba(11, 16, 48, .55);
+            backdrop-filter: blur(4px);
+            border: 3px solid var(--ink);
+            border-radius: 24px;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, .45);
+            min-height: 320px;
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Chapter 1: data bars */
+        .bars { display: flex; align-items: flex-end; gap: 14px; height: 220px; }
+        .bar { width: 30px; border-radius: 8px 8px 0 0; transform-origin: bottom; transform: scaleY(0); }
+
+        /* Chapter 2: neural net */
+        .net { display: flex; gap: 34px; align-items: center; position: relative; }
+        .layer { display: flex; flex-direction: column; gap: 16px; }
+        .dot { width: 22px; height: 22px; border-radius: 50%; background: var(--teal); border: 2px solid var(--ink); transform: scale(0); }
+        .epoch { position: absolute; bottom: -62px; left: 50%; transform: translateX(-50%); white-space: nowrap; }
+
+        /* Chapter 3: words */
+        .words { font-family: "Gochi Hand", cursive; font-size: 2.6rem; line-height: 1.3; text-align: center; }
+        .words span { display: inline-block; margin: 0 .2em; }
+
+        /* Chapter 4: code card */
+        .code { width: 100%; font-size: 1.15rem; }
+        .code .dots { display: flex; gap: 8px; margin-bottom: 16px; }
+        .code .dots i { width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--ink); display: block; }
+        .code .line { padding: 3px 0; opacity: 0; }
+        .code .c1 { color: var(--terracotta); }
+        .code .c2 { color: var(--sage); }
+        .code .c3 { color: var(--mustard); }
+
+        /* ---------- Skills starfish ---------- */
+        .tree-section {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 80px 24px;
+            text-align: center;
+        }
+        .tree-section h2 { font-size: clamp(2.6rem, 6vw, 4rem); margin: 8px 0 12px; }
+        .tree-section .intro { color: var(--muted); margin-bottom: 30px; }
+        .tree-wrap {
+            background: rgba(11, 16, 48, .5);
+            backdrop-filter: blur(4px);
+            border: 3px solid var(--ink);
+            border-radius: 24px;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, .45);
+            padding: 20px 10px;
+        }
+        #tree { width: 100%; height: auto; display: block; overflow: visible; }
+
+        /* tentacles (they draw themselves outward) */
+        #tree .tent {
+            fill: none;
+            stroke: var(--terracotta);
+            stroke-width: 16;
+            stroke-linecap: round;
+            stroke-dasharray: 1 2;
+            stroke-dashoffset: 1;
+        }
+        /* little suckers along each tentacle */
+        #tree .suckers {
+            fill: none;
+            stroke: var(--ink);
+            stroke-width: 5;
+            stroke-linecap: round;
+            stroke-dasharray: 0.1 13;
+            opacity: 0;
+        }
+
+        /* the starfish body */
+        #tree .body { opacity: 0; transform-box: fill-box; transform-origin: center; }
+        #tree .body polygon { fill: var(--terracotta); stroke: var(--terracotta); stroke-width: 16; stroke-linejoin: round; }
+        #tree .body .spot { fill: var(--ink); opacity: .85; }
+        #tree .body .disc { fill: var(--mustard); stroke: var(--ink); stroke-width: 3; }
+        #tree .body text { font-family: "Gochi Hand", cursive; font-size: 24px; fill: var(--night); text-anchor: middle; }
+
+        /* skill labels at the tip of every tentacle */
+        #tree .leaf { opacity: 0; transform-box: fill-box; transform-origin: center; }
+        #tree .pill { transform-box: fill-box; transform-origin: center; transition: transform .2s; }
+        #tree .pill:hover { transform: scale(1.08); }
+        #tree .pill rect { stroke: var(--ink); stroke-width: 3; }
+        #tree .pill text { font-family: "Gochi Hand", cursive; font-size: 26px; fill: var(--night); text-anchor: middle; }
+
+        /* Starfish badge (spins with scroll) */
+        .badge {
+            width: 150px; height: 150px;
+            margin: 0 auto;
+            background: var(--mustard);
+            color: var(--night);
+            display: grid;
+            place-items: center;
+            text-align: center;
+            font-family: "Gochi Hand", cursive;
+            font-size: 1.1rem;
+            line-height: 1.1;
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+        }
+
+        /* ---------- Contact ---------- */
+        .contact {
+            min-height: 90vh;
+            display: grid;
+            place-items: center;
+            text-align: center;
+            padding: 80px 24px;
+        }
+        .contact h2 { font-size: clamp(2.8rem, 8vw, 5.5rem); margin: 20px 0 12px; }
+        .contact p { color: var(--muted); margin-bottom: 30px; }
+        .links { display: flex; gap: 18px; justify-content: center; flex-wrap: wrap; }
+        .links a {
+            padding: 8px 30px;
+            border: 3px solid var(--ink);
+            border-radius: 50px;
+            color: var(--night);
+            background: var(--mustard);
+            text-decoration: none;
+            font-family: "Gochi Hand", cursive;
+            font-size: 1.4rem;
+            box-shadow: 5px 5px 0 rgba(0, 0, 0, .5);
+            transition: transform .15s, box-shadow .15s;
+        }
+        .links a:nth-child(2) { background: var(--sage); }
+        .links a:hover { transform: translate(3px, 3px); box-shadow: 2px 2px 0 rgba(0, 0, 0, .5); }
+
+        footer { text-align: center; padding: 30px; color: var(--ink); font-size: 1rem; }
+
+        @media (max-width: 760px) {
+            .chapter { grid-template-columns: 1fr; gap: 30px; }
+            .chapter.flip .story { order: 0; }
+            .chapter-number { font-size: 5rem; }
+            .moon { width: 150px; height: 150px; margin-left: -75px; }
+        }
+    </style>
+    <noscript><style>.reveal, .chapter-number, .code .line, #tree .leaf, #tree .body { opacity: 1 !important; } #tree .suckers { opacity: .9 !important; } .bar, .dot { transform: none !important; } #tree .tent { stroke-dashoffset: 0 !important; }</style></noscript>
+</head>
+<body>
+    <div id="progress"></div>
+
+    <!-- Evening beach scene -->
+    <div class="scene">
+        <div class="sky"></div>
+        <div class="glow"></div>
+        <div class="stars" id="stars"></div>
+        <div class="moon"></div>
+        <div class="sea">
+            <div class="wave wave1"></div>
+            <div class="reflection" id="reflection"></div>
+            <div class="wave wave2"></div>
+            <div class="wave wave3"></div>
+        </div>
+        <div class="foam"></div>
+        <div class="sand"></div>
+    </div>
+
+    <!-- Prologue -->
+    <header>
+        <div class="hero-text">
+            <p class="hello reveal">Hello, I'm</p>
+            <h1 id="name">Rajarshee Bera</h1>
+            <p class="role reveal">Junior developer &amp; data science enthusiast</p>
+        </div>
+        <p class="scroll-hint" id="hint">scroll down to read my story</p>
+    </header>
+
+    <main>
+                <!-- Chapter 1 -->
+        <section class="chapter flip">
+            <div class="story">
+                <div class="chapter-number">01</div>
+                <p class="chapter-label reveal">Chapter one</p>
+                <h2 class="reveal">And I built some thing really meaning full</h2>
+                <p class="reveal">Ideas need a place to live. I build for the web with HTML, CSS and JavaScript,useing FAST API for backend so what I create can be seen, touched and shared.</p>
+                <span class="tag reveal">Web Development,Software Engineering</span>
+            </div>
+            <div class="stage reveal">
+                <div class="code">
+                    <div class="dots"><i style="background:var(--terracotta)"></i><i style="background:var(--mustard)"></i><i style="background:var(--sage)"></i></div>
+                    <div class="line c1">&lt;h1&gt;Hello, world&lt;/h1&gt;</div>
+                    <div class="line c2">body { background: night; }</div>
+                    <div class="line c3">animate("h1", { y: [40, 0] })</div>
+                    <div class="line c1">&lt;p&gt;Built with care.&lt;/p&gt;</div>
+                </div>
+            </div>
+        </section>
+        <!-- Chapter 2 -->
+        <section class="chapter">
+            <div class="story">
+                <div class="chapter-number">02</div>
+                <p class="chapter-label reveal">Chapter two</p>
+                <h2 class="reveal">It all about Data</h2>
+                <p class="reveal">Every DATASET hides a story. I use Python to clean it, explore it, and find the patterns that were quietly waiting to be noticed.</p>
+                <span class="tag reveal">Data Analysis with PYTHON</span>
+            </div>
+            <div class="stage reveal">
+                <div class="bars" id="bars"></div>
+            </div>
+        </section>
+
+        <!-- Chapter 3 -->
+        <section class="chapter flip">
+            <div class="story">
+                <div class="chapter-number">03</div>
+                <p class="chapter-label reveal">Chapter three</p>
+                <h2 class="reveal">machine can also learn</h2>
+                <p class="reveal">I train and test machine learning and deep learning models, and develop some cool projects.</p>
+                <span class="tag reveal">ML Models &amp; DL Models</span>
+            </div>
+            <div class="stage reveal">
+                <div class="net" id="net">
+                    <div class="epoch">training... epoch <b id="epoch">0</b></div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Chapter 4 -->
+        <section class="chapter">
+            <div class="story">
+                <div class="chapter-number">04</div>
+                <p class="chapter-label reveal">Chapter four</p>
+                <h2 class="reveal">Next, I gave them language</h2>
+                <p class="reveal">With NLP, scattered words become meaning. I work on teaching computers to read, understand, and make sense of human text.</p>
+                <span class="tag reveal">NLP</span>
+            </div>
+            <div class="stage reveal">
+                <p class="words" id="words">Turning messy text into meaning</p>
+            </div>
+        </section>
+
+                <!-- Interlude: the skills starfish -->
+        <section class="tree-section">
+            <p class="chapter-label reveal">Interlude</p>
+            <h2 class="reveal">My skills, arm by arm</h2>
+            <p class="intro reveal">Each tentacle reaches for something I've picked up along the way.</p>
+            <div class="tree-wrap reveal">
+                <svg id="tree" viewBox="0 100 900 700" role="img" aria-label="A starfish where each tentacle ends in one of my technical skills"></svg>
+            </div>
+        </section>
+    </main>
+
+    <!-- Epilogue -->
+    <section class="contact">
+        <div>
+            <div class="badge" id="badge">LET'S<br>TALK</div>
+            <h2 class="reveal">The story continues...</h2>
+            <p class="reveal">I'm just getting started. Come say hello, or watch me grow.</p>
+            <div class="links reveal">
+                <a href="https://github.com/rajarsheebera" target="_blank" rel="noopener">GitHub</a>
+                <a href="https://www.linkedin.com/in/rajarshee-bera-843b15316" target="_blank" rel="noopener">LinkedIn</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>&copy; 2026 Rajarshee Bera</footer>
+
+    <script type="module">
+        import { animate, scroll, inView, stagger } from "https://cdn.jsdelivr.net/npm/motion@latest/+esm";
+
+        const ease = [0.22, 1, 0.36, 1];
+        const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
+        const rand = n => (Math.random() - 0.5) * n;
+
+        // ---------- Build the pieces ----------
+        // Split the name into words > letters
+        const nameEl = document.getElementById("name");
+        nameEl.innerHTML = nameEl.textContent.split(" ").map(w =>
+            `<span class="word">${[...w].map(l => `<span class="letter">${l}</span>`).join("")}</span>`
+        ).join(" ");
+
+        // Stars
+        const starsEl = document.getElementById("stars");
+        for (let i = 0; i < 70; i++) {
+            const s = document.createElement("div");
+            const size = 1 + Math.random() * 2.5;
+            s.className = "star";
+            s.style.cssText = `left:${Math.random() * 100}%;top:${Math.random() * 100}%;width:${size}px;height:${size}px;opacity:.6`;
+            starsEl.appendChild(s);
+        }
+
+        // Moon reflection on the water
+        const refl = document.getElementById("reflection");
+        [160, 140, 120, 100, 85, 70, 55, 40].forEach(w => {
+            const l = document.createElement("i");
+            l.style.width = w + "px";
+            refl.appendChild(l);
+        });
+
+        // Data bars
+        const colors = ["--terracotta", "--mustard", "--sage", "--teal", "--plum", "--terracotta", "--mustard"];
+        const heights = [90, 150, 110, 200, 140, 180, 120];
+        document.getElementById("bars").innerHTML = heights.map((h, i) =>
+            `<div class="bar" style="height:${h}px;background:var(${colors[i]})"></div>`).join("");
+
+        // Neural net dots
+        const net = document.getElementById("net");
+        [3, 5, 5, 2].forEach(n => {
+            const layer = document.createElement("div");
+            layer.className = "layer";
+            layer.innerHTML = '<div class="dot"></div>'.repeat(n);
+            net.appendChild(layer);
+        });
+
+        // NLP words, scattered at first
+        const wordsEl = document.getElementById("words");
+        wordsEl.innerHTML = wordsEl.textContent.split(" ").map(w => `<span>${w}</span>`).join(" ");
+        wordsEl.querySelectorAll("span").forEach(s => {
+            s.dataset.from = `translate(${rand(160)}px, ${rand(120)}px) rotate(${rand(60)}deg)`;
+            s.style.opacity = 0.25;
+            s.style.transform = s.dataset.from;
+        });
+
+        // Skills starfish: one tentacle per skill, spread around the body
+        const skills = ["Python", "C", "C++", "SQL", "Data Analysis", "Database",
+                        "Data Science Fundamentals", "Web Dev", "API Creation", "Backend"];
+        const leafColors = ["--terracotta", "--mustard", "--sage", "--teal", "--plum"];
+        const CX = 450, CY = 450;      // centre of the starfish
+        const RX = 210, RY = 290;      // how far the tentacles reach
+        let tentacles = "", leaves = "";
+
+        skills.forEach((name, i) => {
+            const a = (-90 + i * 36) * Math.PI / 180;      // first skill at the top, then clockwise
+            const cosA = Math.cos(a), sinA = Math.sin(a);
+            const ex = CX + RX * cosA, ey = CY + RY * sinA;
+
+            // long names go on two lines
+            const lines = name.length > 14 ? [name.slice(0, name.lastIndexOf(" ")), name.slice(name.lastIndexOf(" ") + 1)] : [name];
+            const w = Math.max(...lines.map(l => l.length)) * 13 + 44;
+            const h = lines.length * 40 + 12;
+
+            // pill sits beyond the tentacle tip (centred for top and bottom)
+            const rx = cosA > 0.3 ? ex : cosA < -0.3 ? ex - w : ex - w / 2;
+            const cx = rx + w / 2;
+
+            // tentacle ends on the pill's edge
+            const tx = ex;
+            const ty = Math.abs(cosA) <= 0.3 ? ey - Math.sign(sinA) * h / 2 : ey;
+
+            // a wavy tentacle: bend it sideways in opposite directions
+            const dx = tx - CX, dy = ty - CY, len = Math.hypot(dx, dy);
+            const px = -dy / len, py = dx / len;
+            const wob = (i % 2 ? 1 : -1) * 30;
+            const d = `M${CX} ${CY} C ${CX + dx * 0.33 + px * wob} ${CY + dy * 0.33 + py * wob}, ${CX + dx * 0.66 - px * wob} ${CY + dy * 0.66 - py * wob}, ${tx} ${ty}`;
+
+            tentacles += `<path class="tent tent-${i}" pathLength="1" d="${d}"/>`;
+            tentacles += `<path class="suckers suck-${i}" d="${d}"/>`;
+
+            const text = lines.length === 1
+                ? `<text x="${cx}" y="${ey}" dy="0.35em">${name}</text>`
+                : `<text x="${cx}" y="${ey}"><tspan x="${cx}" dy="-0.2em">${lines[0]}</tspan><tspan x="${cx}" dy="1.1em">${lines[1]}</tspan></text>`;
+
+            leaves += `<g class="leaf leaf-${i}"><g class="pill">
+                <rect x="${rx}" y="${ey - h / 2}" width="${w}" height="${h}" rx="${h / 2}" style="fill:var(${leafColors[i % 5]})"/>
+                ${text}</g></g>`;
+        });
+
+        // body: a puffy five-pointed star with spots and a "Skills" disc
+        const pt = (r, deg) => [CX + r * Math.cos(deg * Math.PI / 180), CY + r * Math.sin(deg * Math.PI / 180)];
+        const points = Array.from({ length: 10 }, (_, k) => pt(k % 2 === 0 ? 105 : 50, -90 + k * 36).map(n => n.toFixed(1)).join(",")).join(" ");
+        let spots = "";
+        for (let arm = 0; arm < 5; arm++) {
+            [40, 62, 84].forEach((r, j) => {
+                const [sx, sy] = pt(r, -90 + arm * 72);
+                spots += `<circle class="spot" cx="${sx.toFixed(1)}" cy="${sy.toFixed(1)}" r="${5 - j * 0.7}"/>`;
+            });
+        }
+        const body = `<g class="body"><polygon points="${points}"/>${spots}
+            <circle class="disc" cx="${CX}" cy="${CY}" r="38"/>
+            <text x="${CX}" y="${CY}" dy="0.35em">Skills</text></g>`;
+
+        document.getElementById("tree").innerHTML = tentacles + body + leaves;
+
+        if (calm) {
+            document.querySelectorAll(".reveal, .chapter-number, .code .line, #tree .leaf, #tree .body").forEach(e => e.style.opacity = 1);
+            document.querySelectorAll("#tree .suckers").forEach(e => e.style.opacity = 0.9);
+            document.querySelectorAll(".bar, .dot").forEach(e => e.style.transform = "none");
+            document.querySelectorAll("#tree .tent").forEach(e => e.style.strokeDashoffset = 0);
+            wordsEl.querySelectorAll("span").forEach(s => { s.style.transform = "none"; s.style.opacity = 1; });
+        } else {
+            // ---------- Hero ----------
+            animate(".letter", { opacity: [0, 1], y: [60, 0], rotate: [-10, 0] },
+                { delay: stagger(0.045), duration: 0.9, ease });
+            animate(".hero-text .reveal", { opacity: [0, 1], y: [20, 0] },
+                { delay: stagger(0.5, { startDelay: 0.8 }), duration: 0.8, ease });
+            animate("#hint", { y: [0, 10] }, { duration: 1.2, repeat: Infinity, repeatType: "reverse" });
+
+            // ---------- The beach is alive ----------
+            // twinkling stars
+            document.querySelectorAll(".star").forEach(s => {
+                animate(s, { opacity: [0.15, 1] },
+                    { duration: 1 + Math.random() * 2, delay: Math.random() * 2, repeat: Infinity, repeatType: "reverse" });
+            });
+            // rolling waves
+            animate(".wave1", { x: [0, -200] }, { duration: 9, ease: "linear", repeat: Infinity });
+            animate(".wave2", { x: [-200, 0] }, { duration: 12, ease: "linear", repeat: Infinity });
+            animate(".wave3", { x: [0, -200] }, { duration: 7, ease: "linear", repeat: Infinity });
+            animate(".foam", { x: [-200, 0] }, { duration: 10, ease: "linear", repeat: Infinity });
+            // shimmering moonlight on the water
+            refl.querySelectorAll("i").forEach((l, i) => {
+                animate(l, { scaleX: [0.55, 1] },
+                    { duration: 1.2 + Math.random(), delay: i * 0.15, repeat: Infinity, repeatType: "reverse" });
+            });
+
+            // ---------- Scroll-linked motion ----------
+            // top progress bar
+            scroll(animate("#progress", { scaleX: [0, 1] }, { ease: "linear" }));
+
+            // the moon slowly sets towards the sea as the story goes on
+            scroll(animate(".moon", { y: ["0vh", "42vh"], scale: [1, 1.15] }, { ease: "linear" }));
+
+            // evening glow fades into night
+            scroll(animate(".glow", { opacity: [1, 0.15] }, { ease: "linear" }));
+
+            // each chapter number slides in as you scroll to it
+            document.querySelectorAll(".chapter-number").forEach(el => {
+                scroll(animate(el, { opacity: [0, 1], x: [-80, 0] }, { ease: "linear" }),
+                    { target: el, offset: ["start end", "center center"] });
+            });
+
+            // the starfish badge spins while you scroll past it
+            scroll(animate("#badge", { rotate: [0, 360] }, { ease: "linear" }),
+                { target: document.getElementById("badge"), offset: ["start end", "end start"] });
+
+            // ---------- Reveal when visible ----------
+            document.querySelectorAll("main .reveal, .contact .reveal").forEach(el => {
+                inView(el, () => {
+                    animate(el, { opacity: [0, 1], y: [40, 0] }, { duration: 0.9, ease });
+                }, { amount: 0.3 });
+            });
+
+            // ---------- Chapter 1: bars grow ----------
+            inView("#bars", () => {
+                animate(".bar", { scaleY: [0, 1] }, { delay: stagger(0.1), duration: 0.9, ease });
+            }, { amount: 0.5 });
+
+            // ---------- Chapter 2: network wakes up ----------
+            inView("#net", () => {
+                animate(".dot", { scale: [0, 1] }, { delay: stagger(0.06), duration: 0.5, ease });
+                animate(".dot", { scale: [1, 1.35, 1] },
+                    { delay: stagger(0.12, { startDelay: 1.2 }), duration: 1.8, repeat: Infinity });
+                animate(0, 50, {
+                    duration: 4, ease: "easeOut",
+                    onUpdate: v => document.getElementById("epoch").textContent = Math.round(v)
+                });
+            }, { amount: 0.5 });
+
+            // ---------- Skills starfish comes alive ----------
+            inView("#tree", () => {
+                // the body pops in with a little spin
+                animate(".body", { opacity: [0, 1], scale: [0, 1], rotate: [-60, 0] }, { duration: 1, ease });
+
+                skills.forEach((_, i) => {
+                    const d = 0.6 + i * 0.18;
+                    // tentacle stretches out from the body
+                    animate(`.tent-${i}`, { strokeDashoffset: [1, 0] }, { delay: d, duration: 0.9, ease });
+                    // suckers appear, then the skill label pops at the tip
+                    animate(`.suck-${i}`, { opacity: [0, 0.9] }, { delay: d + 0.7, duration: 0.5 });
+                    animate(`.leaf-${i}`, { opacity: [0, 1], scale: [0, 1] }, { delay: d + 0.75, duration: 0.6, ease });
+                });
+
+                // the starfish breathes slowly
+                animate(".body", { scale: [1, 1.04] },
+                    { delay: 3, duration: 1.6, ease: "easeInOut", repeat: Infinity, repeatType: "reverse" });
+
+                // labels sway gently like the tide is moving them
+                animate(".leaf", { rotate: [-1.5, 1.5] },
+                    { delay: stagger(0.25, { startDelay: 4 }), duration: 3, ease: "easeInOut", repeat: Infinity, repeatType: "reverse" });
+            }, { amount: 0.3 });
+
+            // ---------- Chapter 3: words find their place ----------
+            inView("#words", () => {
+                wordsEl.querySelectorAll("span").forEach((s, i) => {
+                    animate(s, { transform: [s.dataset.from, "none"], opacity: [0.25, 1] },
+                        { delay: i * 0.18, duration: 1.1, ease });
+                });
+            }, { amount: 0.6 });
+
+            // ---------- Chapter 4: code types itself out ----------
+            inView(".code", () => {
+                animate(".code .line", { opacity: [0, 1], x: [-30, 0] },
+                    { delay: stagger(0.35), duration: 0.6, ease });
+            }, { amount: 0.5 });
+        }
+    </script>
+</body>
+</html>
